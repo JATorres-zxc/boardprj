@@ -55,7 +55,7 @@ const MarketingPage = () => {
             </div>
 
             <Button className='mt-6' size='lg' asChild>
-                <Link href='/sighup'>
+                <Link href='/sign-up'>
                     Get Taskify for free
                 </Link>
             </Button>
