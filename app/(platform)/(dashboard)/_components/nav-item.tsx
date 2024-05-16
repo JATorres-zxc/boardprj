@@ -1,9 +1,14 @@
 "use client"
 
-import { AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import React from 'react'
+
+
+import {Activity,CreditCard,Icon,Layout,Settings} from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation' // remember to use next/navigation insted of next/router since its no longer working daw
+import { Button } from '@/components/ui/button'
 
 
 type Organization = {
@@ -21,6 +26,37 @@ interface NavItemProps{
 }
 
 const NavItem = ({isExpanded,isActive,organization,onExpand}:NavItemProps) => {
+
+    const router = useRouter()
+
+    const pathName = usePathname()
+
+    const routes = [{
+        label:'Boards',
+        icon:<Layout className='h-4 w-4 mr-2' />,
+        href:`/organization/${organization.id}`
+    },
+    {
+        label:'Activity',
+        icon:<Activity className='h-4 w-4 mr-2' />,
+        href:`/organization/${organization.id}/activity`
+    },
+    {
+        label:'Settings',
+        icon:<Settings className='h-4 w-4 mr-2' />,
+        href:`/organization/${organization.id}/settings`
+    },
+    {
+        label:'Billing',
+        icon:<CreditCard className='h-4 w-4 mr-2' />,
+        href:`/organization/${organization.id}/billing`
+    },
+]
+
+    const onClick = (href:string) =>{
+        router.push(href)
+    }
+
     return (
         <AccordionItem value={organization.id} className='border-none'>
             <AccordionTrigger 
@@ -45,6 +81,28 @@ const NavItem = ({isExpanded,isActive,organization,onExpand}:NavItemProps) => {
                     </span>
                 </div>
             </AccordionTrigger>
+
+            <AccordionContent className='pt-1 text-neutral-700'>
+                {routes.map((route) =>(
+                    <Button
+                        key={route.href}
+                        size='sm'
+                        onClick={() => onClick(route.href)}
+                        className={cn(
+                            'w-full font-normal justify-start pl-10 mb-1',
+                            pathName === route.href && 'bg-sky-500/10 text-sky-700'
+                        )}
+                        variant='ghost'
+                    >
+                        <div className='flex items-center'>
+                            {route.icon}
+                            <span className='ml-2'>{route.label}</span>  {/* Add this line */}
+                        </div>
+                    </Button>
+                ))}
+
+            </AccordionContent>
+
         </AccordionItem>
     )
 }
